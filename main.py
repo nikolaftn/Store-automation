@@ -56,7 +56,7 @@ def main():
 
 
     webbrowser.open("http://127.0.0.1:5000")
-    web_app.app.run(debug=True, use_reloader=False)
+    web_app.app.run(debug=False, use_reloader=False)
 
             
 

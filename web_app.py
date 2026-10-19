@@ -14,6 +14,3 @@ def daily_report():
         orders = orders_repository.get_todays_orders(conn)
 
     return render_template("daily_report.html", orders=orders)
-
-if __name__ == "__main__":
-    app.run(debug=True)

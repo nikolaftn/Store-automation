@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>Današnje porudžbine</title>
+</head>
+<body>
+    <h1>Današnje porudžbine</h1>
+
+    {% if orders %}
+        <table border="1" cellpadding="6">
+            <thead>
+                <tr>
+                    <th>ID porudžbine</th>
+                    <th>ID klijenta</th>
+                    <th>Broj porudžbine</th>
+                    <th>Status</th>
+                    <th>Ukupno</th>
+                    <th>Valuta</th>
+                    <th>Datum</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order[0] }}</td>
+                        <td>{{ order[1] }}</td>
+                        <td>{{ order[2] }}</td>
+                        <td>{{ order[3] }}</td>
+                        <td>{{ order[4] }}</td>
+                        <td>{{ order[5] }}</td>
+                        <td>{{ order[6] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nema današnjih porudžbina.</p>
+    {% endif %}
+
+    <p><a href="/">Nazad na meni</a></p>
+</body>
+</html>

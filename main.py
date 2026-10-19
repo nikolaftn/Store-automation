@@ -1,6 +1,10 @@
 import sys
-
 import connection
+import api_client
+import requests
+import orders_repository
+import web_app
+import webbrowser
 
 
 def menu():
@@ -26,14 +30,38 @@ def menu():
 
 
 def main():
+
+    try:
+        orders = api_client.get_orders()
+        print("API response received.")
+        print("Number of orders:", len(orders["data"]))
+    
+    except requests.RequestException as error:
+        print(f"Could not fetch orders: {error}")
+        sys.exit(1)
+
     try:
         with connection.get_connection() as conn:
             print("Successfully connected to the database.")
-            menu()
+
+            try:
+                orders_repository.save_orders(conn, orders)
+
+            except connection.psycopg.Error as error:
+                print(f"Could not save data to database: {error}")
+
     except connection.psycopg.OperationalError as error:
         print(f"Could not connect to the database: {error}")
         sys.exit(1)
 
 
+    webbrowser.open("http://127.0.0.1:5000")
+    web_app.app.run(debug=True, use_reloader=False)
+
+            
+
+
 if __name__ == "__main__":
     main()
+
+

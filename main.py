@@ -5,6 +5,7 @@ import requests
 import orders_repository
 import web_app
 import webbrowser
+import threading
 
 
 def menu():
@@ -55,7 +56,7 @@ def main():
         sys.exit(1)
 
 
-    webbrowser.open("http://127.0.0.1:5000")
+    threading.Timer(1, lambda: webbrowser.open("http://127.0.0.1:5000")).start()
     web_app.app.run(debug=False, use_reloader=False)
 
             

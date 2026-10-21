@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registracija kupca</title>
+</head>
+<body>
+    <h1>Registruj novog kupca</h1>
+
+    {% if message %}
+        <p>{{ message }}</p>
+        {% if customer %}
+            <p>ID kupca: <strong>{{ customer.id }}</strong></p>
+            <pre>{{ customer | tojson(indent=2) }}</pre>
+        {% endif %}
+    {% endif %}
+    {% if error %}<p role="alert">{{ error }}</p>{% endif %}
+
+    <form action="/register-customer" method="post">
+        <fieldset>
+            <legend>Obavezni podaci</legend>
+            <label>Ime i prezime <input name="name" required></label><br>
+            <label>Email <input name="email" type="email" required></label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Dodatni podaci (opciono)</legend>
+            <label>Telefon <input name="phone" type="tel"></label><br>
+            <label>Kompanija <input name="company"></label><br>
+            <label>Nivo kupca
+                <select name="tier">
+                    <option value="">Standardni (podrazumevano)</option>
+                    <option value="standard">Standard</option>
+                    <option value="silver">Silver</option>
+                    <option value="gold">Gold</option>
+                    <option value="platinum">Platinum</option>
+                </select>
+            </label><br>
+            <label>Ulica i broj <input name="line1"></label><br>
+            <label>Stan / dodatak <input name="line2"></label><br>
+            <label>Grad <input name="city"></label><br>
+            <label>Region / pokrajina <input name="region"></label><br>
+            <label>Poštanski broj <input name="postal_code"></label><br>
+            <label>Država <input name="country"></label><br>
+            <label>Napomene <textarea name="notes"></textarea></label><br>
+            <label><input type="checkbox" name="marketing_opt_in"> Želim da primam obaveštenja</label>
+        </fieldset>
+
+        <button type="submit">Pošalji registraciju na API</button>
+    </form>
+
+    <p><a href="/">Nazad na meni</a></p>
+</body>
+</html>

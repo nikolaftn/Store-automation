@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simulacija porudžbine</title>
+</head>
+<body>
+    <h1>Simulacija porudžbine</h1>
+    <p>Unesi podatke kupca, adresu isporuke i proizvod.</p>
+
+    <form id="order-form">
+        <fieldset>
+            <legend>Podaci kupca</legend>
+            <label>Ime i prezime <input name="name" required></label><br>
+            <label>Email <input name="email" type="email" required></label><br>
+            <label>Telefon <input name="phone" type="tel"></label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Adresa isporuke</legend>
+            <label>Ulica i broj <input name="line1" required></label><br>
+            <label>Stan / dodatak <input name="line2"></label><br>
+            <label>Grad <input name="city" required></label><br>
+            <label>Region / pokrajina <input name="region" required></label><br>
+            <label>Poštanski broj <input name="postal_code" required></label><br>
+            <label>Država <input name="country" required></label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Porudžbina</legend>
+            <label>ID proizvoda <input name="product_id" type="number" min="1" required></label><br>
+            <label>Količina <input name="quantity" type="number" min="1" max="999" value="1" required></label><br>
+            <label>Valuta <input name="currency" value="USD" required></label><br>
+            <label>Način plaćanja
+                <select name="payment_method" required>
+                    <option value="card">Kartica</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="bank_transfer">Bankovni transfer</option>
+                    <option value="cash_on_delivery">Pouzećem</option>
+                </select>
+            </label><br>
+            <label>Način isporuke
+                <select name="shipping_method" required>
+                    <option value="standard">Standardna</option>
+                    <option value="express">Ekspresna</option>
+                    <option value="overnight">Sledeći dan</option>
+                    <option value="pickup">Lično preuzimanje</option>
+                </select>
+            </label><br>
+            <label>Napomena <textarea name="notes"></textarea></label>
+        </fieldset>
+
+        <button type="submit">Prikaži simulirani request</button>
+    </form>
+
+    <h2>Podaci za slanje API-ju</h2>
+    <p>Prvo se kreira kupac. Zatim se njegov dobijeni ID koristi za kreiranje porudžbine.</p>
+    <h3>POST /customers</h3>
+    <pre id="customer-json"></pre>
+    <h3>POST /orders</h3>
+    <pre id="order-json"></pre>
+
+    <script>
+        document.getElementById("order-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const form = new FormData(event.currentTarget);
+            const value = (name) => form.get(name).trim();
+            const address = {
+                line1: value("line1"),
+                city: value("city"),
+                region: value("region"),
+                postal_code: value("postal_code"),
+                country: value("country")
+            };
+            if (value("line2")) address.line2 = value("line2");
+
+            const customer = { name: value("name"), email: value("email") };
+            if (value("phone")) customer.phone = value("phone");
+            customer.address = address;
+
+            const order = {
+                customer_id: "ID koji vrati POST /customers",
+                status: "pending",
+                currency: value("currency"),
+                payment_method: value("payment_method"),
+                shipping_method: value("shipping_method"),
+                shipping_address: address,
+                items: [{ product_id: Number(value("product_id")), quantity: Number(value("quantity")) }]
+            };
+            if (value("notes")) order.notes = value("notes");
+
+            document.getElementById("customer-json").textContent = JSON.stringify(customer, null, 2);
+            document.getElementById("order-json").textContent = JSON.stringify(order, null, 2);
+        });
+    </script>
+
+    <p><a href="/">Nazad na meni</a></p>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kupci sa API-ja</title>
+</head>
+<body>
+    <h1>Kupci sa SondaHub API-ja</h1>
+    <p>Prikazuje najnovije kupce dostupne ovoj aplikaciji.</p>
+
+    {% if error %}<p role="alert">Greška pri učitavanju: {{ error }}</p>{% endif %}
+    {% if customers %}
+        <table border="1" cellpadding="6">
+            <thead>
+                <tr><th>ID</th><th>Ime</th><th>Email</th><th>Telefon</th></tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                    <tr>
+                        <td>{{ customer.id }}</td>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td>{{ customer.phone or "" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif not error %}
+        <p>Nema kupaca za prikaz.</p>
+    {% endif %}
+
+    <p><a href="/">Nazad na meni</a></p>
+</body>
+</html>
